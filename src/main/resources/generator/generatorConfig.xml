@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+		"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+	<classPathEntry location="G:\generator\generator\sqljdbc4-4.0.jar" />
+	<context id="DB2Tables" targetRuntime="MyBatis3">
+		<commentGenerator>
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+		    <jdbcConnection driverClass="com.microsoft.sqlserver.jdbc.SQLServerDriver" connectionURL="jdbc:sqlserver://piscn.vicp.cc:1433;DatabaseName=PX_Data" userId="sa" password="Jssg2015">
+		</jdbcConnection>
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+		<javaModelGenerator targetPackage="com.sg.business.systemManagement.teamManagement.model" targetProject="G:\generator\generator\src">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="true" />
+		</javaModelGenerator>
+		
+		<sqlMapGenerator targetPackage="com.sg.business.systemManagement.teamManagement.mapper" targetProject="G:\generator\generator\src">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+	
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.sg.business.systemManagement.teamManagement.dao" targetProject="G:\generator\generator\src">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator>
+		<table tableName="px_system_team_user" domainObjectName="TeamUser" enableCountByExample="false" enableUpdateByExample="false" enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false" />
+	</context>
+</generatorConfiguration>
