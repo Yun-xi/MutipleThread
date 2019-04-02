@@ -9,7 +9,7 @@ import java.util.stream.IntStream;
 
 public class ConditionExample3 {
 
-    private final static Lock lock = new ReentrantLock();
+    private final static ReentrantLock lock = new ReentrantLock();
 
     private final static Condition PRODUCE_COND = lock.newCondition();
 
@@ -19,9 +19,13 @@ public class ConditionExample3 {
 
     private final static int MAX_CAPACITY = 100;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         IntStream.range(0, 6).boxed().forEach(ConditionExample3::beginProduce);
         IntStream.range(0, 13).boxed().forEach(ConditionExample3::beginConsume);
+        for (;;) {
+            TimeUnit.SECONDS.sleep(5);
+            System.out.println("=========================");
+        }
     }
 
     private static void beginProduce(int i) {
@@ -45,6 +49,8 @@ public class ConditionExample3 {
     private static void produce() {
         try {
             lock.lock();
+            System.out.println("PRODUCE_COND.getWaitQueueLength: " + lock.getWaitQueueLength(PRODUCE_COND));
+            System.out.println("PRODUCE_COND.hasWaiters: " + lock.hasWaiters(PRODUCE_COND));
             while (TIMESTAMP_POOL.size() >= MAX_CAPACITY) {
                 PRODUCE_COND.await();
             }
@@ -63,6 +69,8 @@ public class ConditionExample3 {
     private static void consume() {
         try {
             lock.lock();
+            System.out.println("CONSUME_COND.getWaitQueueLength: " + lock.getWaitQueueLength(CONSUME_COND));
+            System.out.println("CONSUME_COND.hasWaiters: " + lock.hasWaiters(CONSUME_COND));
             while (TIMESTAMP_POOL.isEmpty()) {
                 CONSUME_COND.await();
             }

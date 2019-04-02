@@ -25,7 +25,7 @@ public class CounterIncrement extends Thread{
     }
 
     private void clean() {
-        System.out.println("do some clean work for the second phase.");
+        System.out.println("do some clean work for the second phaser.");
     }
 
     public void close() {
