@@ -10,8 +10,30 @@ public class CompletableFutureExample4 {
         // runAfterBoth();
         // runAfterEither();
         // combine();
-        compose();
+        // compose();
+        apply();
         Thread.currentThread().join();
+    }
+
+    private static void apply() {
+        CompletableFuture.supplyAsync(() -> {
+            System.out.println("start the compose");
+            sleep(5);
+            System.out.println("end the compose");
+            return "compose-1";
+        }).thenApply(s -> {
+            System.out.println("start the compose2");
+            sleep(3);
+            System.out.println("end the compose2");
+            return s.length();
+        }).thenAccept(System.out::println);
+        /**
+         * start the compose
+         * end the compose
+         * start the compose2
+         * end the compose2
+         * 9
+         */
     }
 
     private static void compose() {
@@ -26,6 +48,13 @@ public class CompletableFutureExample4 {
             System.out.println("end the compose2");
             return s.length();
         })).thenAccept(System.out::println);
+        /**
+         * start the compose
+         * end the compose
+         * start the compose2
+         * end the compose2
+         * 9
+         */
     }
 
     private static void combine() {
