@@ -1,4 +1,4 @@
-package com.example.demo.java.collections;
+package com.example.demo.java.collections.custom;
 
 import java.util.Random;
 
@@ -9,11 +9,11 @@ import java.util.Random;
  */
 public class SimpleSkipList {
 
-    private final static byte HEAD_NODE = (byte) -1;
+    private final static byte HEAD_BIT = (byte) -1;
 
-    private final static byte DATA_NODE = (byte) 0;
+    private final static byte DATA_BIT = (byte) 0;
 
-    private final static byte TAIL_NODE = (byte) -1;
+    private final static byte TAIL_BIT = (byte) 1;
 
     private static class Node {
         private Integer value;
@@ -26,7 +26,7 @@ public class SimpleSkipList {
         }
 
         public Node(Integer value) {
-            this(value, DATA_NODE);
+            this(value, DATA_BIT);
         }
     }
 
@@ -37,8 +37,8 @@ public class SimpleSkipList {
     private Random random;
 
     public SimpleSkipList() {
-        this.head = new Node(null, HEAD_NODE);
-        this.tail = new Node(null, TAIL_NODE);
+        this.head = new Node(null, HEAD_BIT);
+        this.tail = new Node(null, TAIL_BIT);
         head.right = tail;
         tail.left = head;
         this.random = new Random(System.currentTimeMillis());
@@ -51,7 +51,7 @@ public class SimpleSkipList {
             // 将临时节点的右节点作为当前节点
             // 就是一直向右移动，知道没有右节点了或者右节点大于了目标值
             // 临时节点为最小于目标值的节点
-            while(current.right.bit != TAIL_NODE && current.right.value <= element) {
+            while(current.right.bit != TAIL_BIT && current.right.value <= element) {
                 current = current.right;
             }
 
@@ -78,6 +78,24 @@ public class SimpleSkipList {
         int currentLevel = 0;
         while (random.nextDouble() < 0.5d) {
 
+            if (currentLevel >= height){
+                height++;
+
+                Node dumyHeaD = new Node(null, HEAD_BIT);
+                Node dumyTail = new Node(null, TAIL_BIT);
+
+                dumyHeaD.right = dumyTail;
+                dumyHeaD.down = head;
+                head.up = dumyHeaD;
+
+                dumyTail.left = dumyHeaD;
+                dumyTail.down = tail;
+                tail.up = dumyHeaD;
+
+                head = dumyHeaD;
+                tail = dumyTail;
+            }
+
             while ((nearNode != null) && nearNode.up == null) {
                 nearNode = nearNode.left;
             }
@@ -94,6 +112,24 @@ public class SimpleSkipList {
             newNode = upNode;
             currentLevel++;
         }
+
+        size++;
+    }
+
+    public void dumpSkipList() {
+        Node temp = head;
+        int i = height + 1;
+        while (temp != null) {
+            System.out.printf("Total [%d] height [%d]", height + 1, i--);
+            Node node = temp.right;
+            while (node.bit == DATA_BIT) {
+                System.out.printf("->%d ", node.value);
+                node = node.right;
+            }
+            System.out.printf("\n");
+            temp = temp.down;
+        }
+        System.out.println("======================================");
     }
 
     public boolean contains(Integer element) {
@@ -112,5 +148,20 @@ public class SimpleSkipList {
 
     public int size() {
         return size;
+    }
+
+    public static void main(String[] args) {
+        SimpleSkipList skipList = new SimpleSkipList();
+        skipList.add(100);
+        skipList.dumpSkipList();
+
+        skipList.add(1);
+        skipList.dumpSkipList();
+
+        Random random = new Random();
+        for (int i = 0; i < 100000; i++) {
+            skipList.add(random.nextInt(1000));
+        }
+        skipList.dumpSkipList();
     }
 }
