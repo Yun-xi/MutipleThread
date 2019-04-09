@@ -2,11 +2,6 @@ package com.example.demo.java.collections.custom;
 
 import java.util.Random;
 
-/**
- * @author xieyaqi
- * @mail 987159036@qq.com
- * @date 2019-04-08 17:07
- */
 public class SimpleSkipList {
 
     private final static byte HEAD_BIT = (byte) -1;
@@ -68,6 +63,7 @@ public class SimpleSkipList {
     }
 
     public void add(Integer element) {
+        // 将原来的断开，目标值插入进去
         Node nearNode = this.find(element);
         Node newNode = new Node(element);
         newNode.left = nearNode;
@@ -76,9 +72,12 @@ public class SimpleSkipList {
         nearNode.right = newNode;
 
         int currentLevel = 0;
+        // 0.5的概率向上构建
         while (random.nextDouble() < 0.5d) {
 
+            // 当前层高高于了高度
             if (currentLevel >= height){
+                // 构建新的一层
                 height++;
 
                 Node dumyHeaD = new Node(null, HEAD_BIT);
